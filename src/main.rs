@@ -22,11 +22,8 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(context.clone()))
-            .service(hello)
-            .service(echo)
             .service(list_employee)
             .service(create_employee)
-            .route("/hey", web::get().to(manual_hello))
     })
     .bind(("app", 8080))?
     .run()
