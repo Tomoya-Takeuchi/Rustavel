@@ -9,3 +9,7 @@ edition = "2021"
 actix-web = "4"
 dotenv = "0.15.0"
 sqlx = { version = "0.6", features = [ "mysql", "runtime-actix-rustls" ] }
+async-trait = "0.1.64"
+serde = { version = "1.0", features = ["derive"] }
+thiserror = "1.0"
+anyhow = "1.0"
