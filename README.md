@@ -1,3 +1,3 @@
 # Rustavel
 
-Web Server With Rust
+Web(also includes Web API) Server With Rust
