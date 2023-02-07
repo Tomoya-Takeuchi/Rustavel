@@ -24,7 +24,7 @@ enum RepositoryErr {
 #[async_trait]
 pub trait EmployeeRepository: Clone + std::marker::Send
     + std::marker::Sync + 'static {
-    async fn create(&self, payload: Employee) -> anyhow::Result<Employee>;
+    async fn create(&self, payload: Employee) -> anyhow::Result<()>;
     async fn list(&self) -> anyhow::Result<Vec<Employee>>;
 }
 
@@ -41,8 +41,16 @@ impl EmployeeRepositoryForDB {
 
 #[async_trait]
 impl EmployeeRepository for EmployeeRepositoryForDB {
-    async fn create(&self, payload: Employee) -> anyhow::Result<Employee> {
-        todo!()
+    async fn create(&self, payload: Employee) -> anyhow::Result<()> {
+        sqlx::query("
+            INSERT INTO employee (id, name)
+            VALUES (?, ?);
+        ")
+        .bind(&payload.id)
+        .bind(&payload.name)
+        .execute(&self.pool)
+        .await?;
+        Ok(())
     }
     async fn list(&self) -> anyhow::Result<Vec<Employee>> {
         let res = sqlx::query_as::<_, Employee>(r#"

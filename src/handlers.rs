@@ -21,10 +21,17 @@ pub async fn list_employee(data: web::Data<RequestContext>) -> impl Responder {
 }
 
 #[post("/employee/create")]
-pub async fn create_employee(req: web::Json<Employee>) -> impl Responder {
+pub async fn create_employee(data: web::Data<RequestContext>, req: web::Json<Employee>) -> impl Responder {
     let employee = Employee {
         id: req.id,
         name: req.name.to_string(),
     };
-    HttpResponse::Ok().json(employee)
+    match data.employee_repository().create(employee).await {
+        Ok(ok)=>ok,
+        Err(err)=>{
+            eprint!("Error: sqlx said, {}\n",err);
+            process::exit(1);
+        }
+    };
+    HttpResponse::Ok().json("created")
 }
